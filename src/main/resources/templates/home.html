@@ -1,11 +1,16 @@
 <html>
+<style>
+body {
+    color: white;
+    text-shadow: 2px 2px 4px #000000;
+}
+</style>
 <div align="center">
 <head>
     <h1>Bowling Scores</h1>
 </head>
     <br>
-<body>
-<!--style = 'background-image: url(pins2.jpg)';-->
+<body style = 'background-image: url(pins.jpg)';>
 {{^username}}
 <form action="/login" method="post">
     <input type="text" name="username" placeholder="Username">
@@ -47,7 +52,7 @@
 <br>
 {{#games}}
 <br>
-<b>[ {{score}} ]</b> {{alley}}: {{bowler}} rolled {{strikes}} strikes! Comment: {{comment}}
+<b>[ {{score}} ]</b> {{alley}}: {{bowler}} rolled {{strikes}} strikes! - Comment: {{comment}}
 <br>
 {{#userentry}}
     <form action="/delete-game" method="post" style="display: inline-block;">
