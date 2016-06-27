@@ -13,6 +13,9 @@ public class Game {
     int id;
 
     @Column(nullable = false)
+    String bowler;
+
+    @Column(nullable = false)
     String alley;
 
     @Column(nullable = false)
@@ -30,7 +33,18 @@ public class Game {
     public Game() {
     }
 
-    public Game(String alley, String score, int strikes, String comment, User user) {
+    public Game(String bowler, String alley, String score, int strikes, String comment, User user) {
+        this.bowler = bowler;
+        this.alley = alley;
+        this.score = score;
+        this.strikes = strikes;
+        this.comment = comment;
+        this.user = user;
+    }
+
+    public Game(int id, String bowler, String alley, String score, int strikes, String comment, User user) {
+        this.id = id;
+        this.bowler = bowler;
         this.alley = alley;
         this.score = score;
         this.strikes = strikes;
@@ -44,6 +58,14 @@ public class Game {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getBowler() {
+        return bowler;
+    }
+
+    public void setBowler(String bowler) {
+        this.bowler = bowler;
     }
 
     public String getAlley() {

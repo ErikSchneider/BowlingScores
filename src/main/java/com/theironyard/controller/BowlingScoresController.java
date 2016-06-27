@@ -27,8 +27,27 @@ public class BowlingScoresController {
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public String home(HttpSession session, Model model) {
         String username = (String) session.getAttribute("username");
+        Boolean showEdit = (Boolean) session.getAttribute("showedit");
+        Iterable<Game> gameList = games.findAll();
+        Boolean userEntry;
+
+        for (Game g: gameList) {
+
+            if (username!= null && username.equals(g.getUser().getName())) {
+                userEntry = true;
+
+            } else{
+
+                userEntry = false;
+            }
+
+            model.addAttribute("userentry", userEntry);
+        }
+
         model.addAttribute("username", username);
-        model.addAttribute("games", games.findAll());
+        model.addAttribute("games", gameList);
+        model.addAttribute("showedit", showEdit);
+
         return "home";
     }
 
@@ -36,12 +55,15 @@ public class BowlingScoresController {
     public String login(HttpSession session, String username, String password) throws Exception {
         User user = users.findByName(username);
         if (user == null) {
+
             user = new User(username, PasswordStorage.createHash(password));
             users.save(user);
         }
+
         else if (!PasswordStorage.verifyPassword(password, user.getPassword())) {
             throw new Exception("Incorrect Password!");
         }
+
         session.setAttribute("username", username);
         return "redirect:/";
     }
@@ -53,22 +75,39 @@ public class BowlingScoresController {
     }
 
     @RequestMapping(path = "/create-game", method = RequestMethod.POST)
-    public String createGame(String alley, String score, int strikes, String comment, HttpSession session) {
+    public String createGame(String bowler, String alley, String score, int strikes, String comment, HttpSession session) {
         String username = (String) session.getAttribute("username");
         User user = users.findByName(username);
-        Game g = new Game(alley, score, strikes, comment, user);
+        Game g = new Game(bowler, alley, score, strikes, comment, user);
         games.save(g);
         return "redirect:/";
     }
 
     @RequestMapping(path = "/edit-game", method = RequestMethod.POST)
-    public String editGame() {
+    public String editGame(String bowler, String alley, String score, int strikes, String comment, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        boolean showEdit = false;
+        User user = users.findByName(username);
+        session.setAttribute("showedit", showEdit);
+        Integer id = (Integer) (session.getAttribute("id"));
+        Game g = new Game(id, bowler, alley, score, strikes, comment, user);
+        games.save(g);
+        return "redirect:/";
+    }
+
+    @RequestMapping(path = "/show-edit", method = RequestMethod.POST)
+    public String edit(HttpSession session, Integer id) {
+        String username = (String) session.getAttribute("username");
+        boolean showEdit = true;
+        User user = users.findByName(username);
+        session.setAttribute("showedit", showEdit);
+        session.setAttribute("id", id);
         return "redirect:/";
     }
 
     @RequestMapping(path = "delete-game", method = RequestMethod.POST)
     public String deleteGame(int id) {
-            games.delete(id);
-            return "redirect:/";
+        games.delete(id);
+        return "redirect:/";
     }
 }
