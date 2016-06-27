@@ -32,12 +32,10 @@ public class BowlingScoresController {
         Boolean userEntry;
 
         for (Game g: gameList) {
-
-            if (username!= null && username.equals(g.getUser().getName())) {
+            if (username != null && username.equals(g.getUser().getName())) {
                 userEntry = true;
 
             } else{
-
                 userEntry = false;
             }
 
